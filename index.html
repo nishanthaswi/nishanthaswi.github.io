@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <title>Voice Assistant</title> -->
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column; /* Make content stack vertically */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        #lottie-container {
+            width: 400px; /* Adjust width as needed */
+            height: 400px; /* Adjust height as needed */
+            perspective: 1000px; /* Apply perspective */
+        }
+
+        #lottie-container iframe {
+            border: none; /* Remove border outline */
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d; /* Preserve 3D transformations */
+        }
+
+        #conversation {
+            margin-top: 20px;
+            font-size: 50px; /* Adjust margin as needed */
+        }
+    </style>
+</head>
+<body>
+    <div id="lottie-container">
+        <iframe src="https://lottie.host/embed/63bd62f1-8b18-47ac-b398-90744fc228ef/7WNWIoKjhs.json"></iframe>
+    </div>
+
+    <div id="conversation"></div>
+
+    <script>
+        window.onload = function() {
+            recognizeSpeech();
+        };
+
+        function recognizeSpeech() {
+            var conversationElement = document.getElementById('conversation');
+            conversationElement.innerHTML = '<p>Listening...</p>';
+            fetch('/recognize')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        conversationElement.innerHTML += '<p>Error: ' + data.error + '</p>';
+                    } else {
+                        conversationElement.innerHTML += '<p>You: ' + data.user_input + '</p>';
+                        conversationElement.innerHTML += '<p>Assistant: ' + data.assistant_response + '</p>';
+                    }
+                })
+                .catch(error => {
+                    conversationElement.innerHTML += '<p>Error: ' + error.message + '</p>';
+                });
+        }
+       
+    window.onload = function() {
+        recognizeSpeech();
+    };
+
+    function recognizeSpeech() {
+        var conversationElement = document.getElementById('conversation');
+        conversationElement.innerHTML = '<p>Listening...</p>';
+        fetch('/recognize')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    conversationElement.innerHTML += '<p>Error: ' + data.error + '</p>';
+                } else {
+                    conversationElement.innerHTML += '<p>You: ' + data.user_input + '</p>';
+                    conversationElement.innerHTML += '<p>Assistant: ' + data.assistant_response + '</p>';
+                }
+                // Call recognizeSpeech() again after a delay
+                setTimeout(recognizeSpeech, 2000); // Change delay as needed (in milliseconds)
+            })
+            .catch(error => {
+                conversationElement.innerHTML += '<p>Error: ' + error.message + '</p>';
+                // Call recognizeSpeech() again after a delay
+                setTimeout(recognizeSpeech, 2000); // Change delay as needed (in milliseconds)
+            });
+    }
+
+
+    </script>
+</body>
+</html>
